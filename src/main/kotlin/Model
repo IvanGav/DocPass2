@@ -1,0 +1,89 @@
+Storage model:
+    An encrypted save file is in a directory along with folder containing encrypted 'stored files' by key.
+    Each stored file contains (encrypted) image, audio, pdf, etc.
+    Directories hold entry files or other directories.
+    Entry files store a map of (field_name,string OR StoredRef).
+
+________________________________________________________________________________________________________________________
+
+SaveFile = {
+    "categories" : {
+        cid1 : Category1,
+        ..
+        cidN : CategoryN
+    },
+    "entries" : {
+        eid1 : Entry1,
+        ..
+        eidN : EntryN
+    },
+    "order" : OrderingInformation
+}
+where:
+    eid1 = id of an entry, referenced to from categories in array "entries"
+    cid1 = id of a category, referenced to from categories in array "categories"
+
+Category = {
+    "title" : title
+    "categories" : [Category1,..,CategoryN]
+    "entries" : [Entry1,..,EntryN]
+}
+where:
+    Category = id of a referenced category
+    Entry = id of a referenced entry
+
+Entry = {
+    name1 : field1,
+    ..
+    nameN : fieldN
+}
+where:
+    name = name of a field
+    field = Str or FileRef
+
+Str = {
+    "type" = "str",
+    "data" = str
+}
+where:
+    str = string to store
+
+FileRef (stored file reference) = {
+    "type" : type,
+    "filename" : filename,
+    "password" : password
+}
+where:
+    type = pdf, jpg, png, mp3, etc. of a stored file
+    filename = name (id) of a stored file
+    password = password to decrypt a stored file
+
+OrderingInformation = {
+    item1 : [key1, .., keyN],
+    ..
+    itemN : [key1, .., keyN]
+}
+where:
+    item = id of an item for which the order is specified
+    key1..N = ordered list of names, that are the display order
+
+NOTES:
+    OrderingInformation is irrelevant for pure storage of data, it's purely for ui and usability purposes
+    The root directory of a DocPass database should contain: savefile (.docpas) AND folder of stored files (no extension)
+    "categories" should contain a directory with id = "root", which is the root directory of this savefile.
+
+________________________________________________________________________________________________________________________
+
+File system model: (DEPRECATED)
+    ./ = indicate this directory
+    ../ = indicate previous directory
+    / = indicate a root directory
+    Path/File = indicate a file File in a directory indicated by Path
+    File = indicate a file File in this directory
+    Path/Dir/ = indicate a directory Dir in a directory indicated by Path
+    Dir/ = indicate a directory Dir in this directory
+
+________________________________________________________________________________________________________________________
+
+Naming requirements: (DEPRECATED)
+    No special characters (which ones?) and whitespaces (except space)
