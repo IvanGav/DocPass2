@@ -3,6 +3,7 @@ package ui
 import sys.Category
 import sys.Entry
 import sys.EntryTemplate
+import sys.StrField
 import kotlin.random.Random
 
 class SysInterface(
@@ -36,6 +37,7 @@ class SysInterface(
         val newId = "${Random.nextInt()}" //use a generator here
         categories[insideId]!!.entries.add(newId)
         entries[newId] = Entry.fromTemplate(template)
+        if(entries[newId]!!.map["Title"] is StrField) (entries[newId]!!.map["Title"] as StrField).data = title
         return newId
     }
 
